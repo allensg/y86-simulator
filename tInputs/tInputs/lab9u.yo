@@ -1,0 +1,16 @@
+                      | 
+                      | #
+                      | #   test exception handling
+                      | #
+  0x000: 30f4fdffffff |     irmovl $-3, %esp
+  0x006: 30f104000000 |     irmovl $4, %ecx
+  0x00c: 6211         |     andl %ecx, %ecx
+  0x00e: b01f         |     popl %ecx                #this will cause a memory error
+  0x010: 6244         |     andl %esp, %esp          #won't set condition codes because of error
+  0x012: 10           |     nop
+  0x013: c007000000   |     dump 7
+  0x018: 00           |     halt
+  0x019: 10           |     nop                      #need nop until stalls are implemented
+  0x01a: 10           |     nop
+  0x01b: 10           |     nop
+                      | #

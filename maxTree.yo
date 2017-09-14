@@ -1,0 +1,103 @@
+                      | 
+                      | #
+                      | #    This file tests the call and return instructions
+                      | #    by calling a recursive maxTree function. The maxTree
+                      | #    function finds the maximum value in a binary search tree.
+                      | #
+  0x000:              |         .pos 0
+  0x000: 30f400040000 |         irmovl Stack, %esp
+  0x006: 30f500040000 |         irmovl Stack, %ebp
+  0x00c: 7011000000   |         jmp Main
+                      | #
+  0x011: 30f180000000 | Main:   irmovl root, %ecx               # root of binary tree
+  0x017: 501100000000 |         mrmovl (%ecx), %ecx
+  0x01d: 10           |         nop                             # need this until stalls implemented
+  0x01e: a01f         |         pushl %ecx
+  0x020: 802b000000   |         call maxTree                    # gets max of tree; result in %eax
+  0x025: c007000000   |         dump 7
+  0x02a: 00           |         halt
+                      | #
+                      | #       int maxTree(Tree * treeptr)
+                      | #       {
+                      | #          if (treeptr == NULL)         # Empty tree
+                      | #              return 0;
+                      | #          else if (treeptr->right == NULL)
+                      | #              return treeptr->value
+                      | #          else
+                      | #              return maxTree(treeptr->right)
+                      | #
+                      | #       }
+                      | #
+  0x02b: a05f         | maxTree: pushl %ebp                   #set up stack frame 
+  0x02d: 2045         |          rrmovl %esp, %ebp
+  0x02f: 30f000000000 |          irmovl 0, %eax
+  0x035: 503508000000 |          mrmovl 8(%ebp), %ebx         #treeptr parameter
+                      |                                 #Your code goes here;  don't change anything above this
+  0x03b: 30f104000000 |          irmovl $4, %ecx        #start, might not be ebx
+  0x041: 503304000000 |          mrmovl 4(%ebx), %ebx    #put val in tree
+  0x047: 30f700000000 |          irmovl $0, %edi        #test value
+  0x04d: 6173         |          subl   %edi, %ebx      #check by subtraction
+  0x04f: 7372000000   |          je     done            #max value so jump to end
+  0x054: 10           |          nop
+  0x055: 10           |          nop
+  0x056: b00f         |          popl   %eax            #get value
+  0x058: 6010         |          addl   %ecx, %eax      #increment
+  0x05a: 500000000000 |          mrmovl (%eax), %eax    #grab the value
+  0x060: 6170         |          subl   %edi, %eax      #
+  0x062: 7372000000   |          je     done            #go to done
+  0x067: 400400000000 |          rmmovl %eax, (%esp)    #put value back
+  0x06d: 802b000000   |          call maxTree
+                      | 
+  0x072: 90           | done:    ret
+  0x073: 10           |          nop            
+  0x074: 10           |          nop
+  0x075: 10           |          nop
+                      | 
+                      | #
+                      | #
+                      | #        Don't change anything below this.   Return value needs to be
+                      | #        in register %eax
+  0x076: 2054         |          rrmovl %ebp, %esp
+  0x078: b05f         |          popl %ebp
+  0x07a: 90           |          ret
+  0x07b: 10           |          nop
+  0x07c: 10           |          nop
+  0x07d: 10           |          nop
+                      | 
+  0x080:              |          .align 4
+  0x080: 84000000     | root:    .long t0
+  0x084: 90000000     | t0:      .long t1         #pointer to left node
+  0x088: b4000000     |          .long t2         #pointer to right node
+  0x08c: 12000000     |          .long 0x12       #value of node
+                      | 
+  0x090: 9c000000     | t1:      .long t3 
+  0x094: a8000000     |          .long t4
+  0x098: 06000000     |          .long 0x6
+                      | 
+  0x09c: 00000000     | t3:      .long 0 
+  0x0a0: 00000000     |          .long 0
+  0x0a4: 03000000     |          .long 0x3
+                      | 
+  0x0a8: 00000000     | t4:      .long 0 
+  0x0ac: 00000000     |          .long 0
+  0x0b0: 08000000     |          .long 0x8
+                      | 
+  0x0b4: c0000000     | t2:      .long t5
+  0x0b8: cc000000     |          .long t6
+  0x0bc: 20000000     |          .long 0x20
+                      | 
+  0x0c0: 00000000     | t5:      .long 0
+  0x0c4: 00000000     |          .long 0
+  0x0c8: 16000000     |          .long 0x16
+                      | 
+  0x0cc: 00000000     | t6:      .long 0
+  0x0d0: d8000000     |          .long t7
+  0x0d4: 22000000     |          .long 0x22
+                      | 
+  0x0d8: 00000000     | t7:      .long 0
+  0x0dc: 00000000     |          .long 0
+  0x0e0: 24000000     |          .long 0x24
+                      | 
+  0x400:              |          .pos 0x400
+  0x400:              | Stack:
+                      | 
